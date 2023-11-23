@@ -9,42 +9,42 @@ package br.g12.duque.guilherme.models;
  * @author 08139
  */
 public class Category {
+
     // Atributos da classe //
     private int id;
     private String name;
     private String description;
-    
+
     // Construtor  Category(tipo do objeto) cat(nome) = new Category()(construtor)//
-    
     //Construtor padrao
-    public Category(){
+    public Category() {
         System.out.println("Categoria Criada!");
     }
-    
+
     //Construtor com parametros
     public Category(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        
+
     }
-    
+
     //Construtor para carregamento do Combobox
-    public Category(int id, String name){
+    public Category(int id, String name) {
         this.id = id;
         this.name = name;
     }
-    
+
     //Construtor que será usado no Form de cadastro
-    public Category(String name, String description){
+    public Category(String name, String description) {
         this.name = name;
         this.description = description;
     }
-    
+
     // GETTER E SETTER    
     public int getId() {
         return id;
-        
+
     }
 
     public void setId(int id) {

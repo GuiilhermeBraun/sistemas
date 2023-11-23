@@ -5,17 +5,20 @@
 package br.g12.duque.guilherme.dao;
 
 import br.g12.duque.guilherme.gestor.Conexao;
-import br.g12.duque.guilherme.gestor.InterBanco;
 import br.g12.duque.guilherme.models.Category;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import br.g12.duque.guilherme.gestor.repositorys.IRepositoryCategory;
 
 /**
  *
  * @author 08139
  */
-public class CategoryDao implements InterBanco{
+public class CategoryDao implements IRepositoryCategory{
     
     private Category category;
     
@@ -47,22 +50,97 @@ public class CategoryDao implements InterBanco{
 
     @Override
     public boolean update() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // 1.Definir o comando sql que será executado
+        String sql = "UPDATE categories SET "
+                +"SET name = ?, description = ? "
+                +"WHERE id = ?";
+        
+        // 2. Definir uma variavel que dira se  a operação foi bem sucedida
+        boolean success = false;
+        
+        // 3. conectar a aplicação no banco de dados
+        Connection conn = Conexao.getConnection();
+        
+        // 4. Fazer o tratamento de possíveis erros da aplicação
+        try{
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, category.getName());
+            pst.setString(2, category.getDescription());
+            pst.setInt(3, category.getId());
+            pst.executeUpdate();
+            success = true;
+        }catch(SQLException ex){
+            System.out.println("Erro na operação: "+ ex.getMessage());
+            success = false;
+        }
+        
+        //5. Avise o aplicativo se deu certo
+        return success;
     }
 
     @Override
     public boolean delete() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        //1. Definir o comando sql que será executado
+        String sql = "DELETE FROM categories WHERE id = ?";
+        
+        //2. Definir uma variavel que dira se a operação foi bem sucedida
+        boolean success = false;
+        
+        //3. Conectar a aplicação com o banco de dados
+        Connection conn = Conexao.getConnection();
+        
+        //4. Tratamento de possíveis erros
+        try{
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setInt(1, category.getId());
+            pst.executeUpdate();
+            success = true;
+        }catch(SQLException ex){
+            System.out.println("Erro ao excluir registro. "
+            +"\nMenssagem do servidor: "+ ex.getMessage());
+            success = false;
+        }
+        
+        //5. avisar o aplicativo se deu certo ou errado
+        return success;
     }
 
     @Override
-    public boolean findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public ArrayList findAll() {
+        //1. Criar uma lista que armazenará todas as categorias
+        ArrayList<Category> list = new ArrayList<Category>();
+        
+        //2. Definir uma variavel que dira se a operação foi bem sucedida
+        boolean success = false;
+        
+        //3. Definir qual comando sql sera executado
+        String sql = "SELECT id, name, description FROM categories";
+        
+        //4. Estabelecer conexão com o banco de dados
+        Connection conn = Conexao.getConnection();
+        
+        //5. Tratar os possiveis erros ou excessoes
+        try{
+            // 6. Enviar a querry para o banco de dados
+            Statement stm = conn.createStatement();
+            
+            //7. O banco retorna o resultado da consulta
+            ResultSet rs = stm.executeQuery(sql);
+            
+            //8. Salvar resultado da query dentro da lista
+            while(rs.next()){
+                list.add(new Category(rs.getInt("id"),rs.getString("name"),rs.getString("description")));
+            }
+        }catch(SQLException ex){
+            System.out.println("Erro: "+ ex.getMessage());
+        }
+        return list;
     }
 
     @Override
-    public boolean findById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Category findById() {
+      String sql = "SELECT name, description FROM categories "
+              +"WHERE id = "+ category.id;
     }
     
 }
