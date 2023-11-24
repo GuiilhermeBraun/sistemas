@@ -67,6 +67,14 @@ public class Category {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return  this.id+"-"+this.name+"-"+this.description+"\n";
+    }
+    
+    
+
     public static void main(String[] args) {
+        
     }
 }

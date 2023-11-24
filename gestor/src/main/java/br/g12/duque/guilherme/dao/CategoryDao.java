@@ -52,7 +52,7 @@ public class CategoryDao implements IRepositoryCategory{
     public boolean update() {
         // 1.Definir o comando sql que será executado
         String sql = "UPDATE categories SET "
-                +"SET name = ?, description = ? "
+                +"name = ?, description = ? "
                 +"WHERE id = ?";
         
         // 2. Definir uma variavel que dira se  a operação foi bem sucedida
@@ -139,7 +139,7 @@ public class CategoryDao implements IRepositoryCategory{
 
     @Override
     public Category findById() {
-      String sql = "SELECT name, description FROM categories "
+      String sql = "SELECT id, name, description FROM categories "
               +"WHERE id = "+ category.getId();
       
       Category category = null;
@@ -154,7 +154,7 @@ public class CategoryDao implements IRepositoryCategory{
           if(rs.getRow() > 0){
               category = new Category(rs.getInt("id"),rs.getString("name"), rs.getString("description"));
           }else{
-              System.out.println("Categoria não encontrada");
+              System.out.println("Categoria nao encontrada");
               return null;
           }
       }catch(SQLException ex){
